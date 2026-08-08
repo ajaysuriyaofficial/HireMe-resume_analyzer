@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIREme — Intelligent Resume Analyzer</title>
+<meta name="description" content="Rule-based, fully local resume-to-job-description matching dashboard.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ SKIP LINK ============ -->
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============ 1. NAVIGATION BAR ============ -->
+<header class="navbar">
+  <div class="navbar-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">HM</span>
+      <div class="brand-text">
+        <span class="brand-name">HIREme</span>
+        <span class="brand-tag">Intelligent Resume Analyzer</span>
+      </div>
+    </div>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#analyzer">Resume Analyzer</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <div class="status-pill" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      LOCAL ANALYSIS
+    </div>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav id="mobileNav" class="mobile-nav" aria-label="Mobile">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#analyzer">Resume Analyzer</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ============ 2. HERO SECTION ============ -->
+  <section class="hero" id="dashboard">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow">Rule-Based Resume Analysis &amp; Requirement Matching</p>
+        <h1>Intelligent Resume<br>Analyzer</h1>
+        <p class="hero-sub">Compare resumes with job requirements and identify the most relevant candidates faster — entirely inside your browser.</p>
+        <div class="hero-actions">
+          <a href="#analyzer" class="btn btn-gold">Analyze Resumes</a>
+          <a href="#how-it-works" class="btn btn-ghost">How It Works</a>
+        </div>
+      </div>
+
+      <div class="hero-card" aria-label="Key attributes">
+        <ul class="hero-facts">
+          <li><span class="fact-dot"></span> 100% Local Processing</li>
+          <li><span class="fact-dot"></span> No External APIs</li>
+          <li><span class="fact-dot"></span> Fast Resume Matching</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS DASHBOARD (SUMMARY) ============ -->
+  <section class="summary-section" aria-label="Analysis summary">
+    <div class="section-inner">
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span class="summary-value" id="statTotal">0</span>
+          <span class="summary-label">Total Resumes</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value" id="statAnalyzed">0</span>
+          <span class="summary-label">Analyzed</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value" id="statAverage">0%</span>
+          <span class="summary-label">Average Match</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value" id="statTop">—</span>
+          <span class="summary-label">Top Candidate</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3 & 4. ANALYZER (JD + RESUMES) ============ -->
+  <section class="analyzer-section" id="analyzer">
+    <div class="section-inner">
+      <div class="section-heading">
+        <h2>Resume Analyzer</h2>
+        <div class="section-actions">
+          <button class="btn btn-outline" id="loadDemoBtn" type="button">Load Demo Data</button>
+          <button class="btn btn-danger-outline" id="clearBtn" type="button">Clear Analysis</button>
+        </div>
+      </div>
+
+      <div class="analyzer-grid">
+
+        <!-- Job description card -->
+        <div class="card glass" id="jdCard">
+          <h3 class="card-title">Job Description</h3>
+          <label for="jdInput" class="field-label">Paste the complete job description</label>
+          <textarea id="jdInput" class="textarea" rows="10"
+            placeholder="Paste the Job Description here...
+
+Example:
+We are looking for a Software Engineer with experience in JavaScript, HTML, CSS, SQL and Git.
+Required skills:
+JavaScript
+HTML
+CSS
+SQL
+Git
+Problem solving
+Communication skills"></textarea>
+
+          <button class="btn btn-gold" id="analyzeJdBtn" type="button">Analyze Job Description</button>
+
+          <div class="jd-results hidden" id="jdResults">
+            <h4 class="subheading">Required Skills</h4>
+            <div class="tag-row" id="jdSkillTags"></div>
+            <h4 class="subheading">Job Keywords</h4>
+            <div class="tag-row muted-tags" id="jdKeywordTags"></div>
+          </div>
+        </div>
+
+        <!-- Resume input card -->
+        <div class="card glass" id="resumeCard">
+          <h3 class="card-title">Candidate Resumes</h3>
+          <p class="hint-text">For fully local analysis, paste resume text or upload a .txt resume.</p>
+
+          <label for="candidateName" class="field-label">Candidate name (optional)</label>
+          <input type="text" id="candidateName" class="text-input" placeholder="e.g. Arun Kumar">
+
+          <label for="resumeInput" class="field-label">Resume text</label>
+          <textarea id="resumeInput" class="textarea" rows="8" placeholder="Paste resume text here..."></textarea>
+
+          <label for="resumeFile" class="field-label">Or upload a .txt resume</label>
+          <input type="file" id="resumeFile" class="file-input" accept=".txt,text/plain">
+
+          <button class="btn btn-gold" id="addResumeBtn" type="button">Add Resume</button>
+
+          <p class="jd-warning hidden" id="jdWarning">Please analyze a job description first.</p>
+        </div>
+      </div>
+
+      <!-- Candidate cards -->
+      <div class="candidates-wrap">
+        <h3 class="card-title">Candidates</h3>
+        <p class="empty-state" id="candidatesEmpty">No candidates added yet. Add a resume above or load demo data.</p>
+        <div class="candidates-grid" id="candidatesGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. CANDIDATE RANKING ============ -->
+  <section class="ranking-section" aria-label="Candidate ranking">
+    <div class="section-inner">
+      <h2>Candidate Ranking</h2>
+      <p class="disclaimer">Scores are analytical assistance only and should not replace human evaluation.</p>
+
+      <div class="table-wrap">
+        <table class="ranking-table" id="rankingTable">
+          <caption class="sr-only">Candidates ranked by overall match score</caption>
+          <thead>
+            <tr>
+              <th scope="col">Rank</th>
+              <th scope="col">Candidate</th>
+              <th scope="col">Match Score</th>
+              <th scope="col">Skills Match</th>
+              <th scope="col">Keyword Match</th>
+              <th scope="col">Experience</th>
+              <th scope="col">Missing Skills</th>
+              <th scope="col">Recommendation</th>
+            </tr>
+          </thead>
+          <tbody id="rankingBody">
+            <tr class="empty-row"><td colspan="8">No ranked candidates yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. CANDIDATE DETAIL VIEW (DIALOG) ============ -->
+  <div class="detail-overlay hidden" id="detailOverlay">
+    <div class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detailName" id="detailPanel">
+      <button class="detail-close" id="detailClose" type="button" aria-label="Close candidate detail">&times;</button>
+
+      <h3 id="detailName">Candidate Name</h3>
+      <p class="detail-filename" id="detailFilename"></p>
+
+      <div class="score-ring-wrap">
+        <svg viewBox="0 0 140 140" class="score-ring" id="scoreRing" aria-hidden="true">
+          <circle cx="70" cy="70" r="60" class="ring-track"></circle>
+          <circle cx="70" cy="70" r="60" class="ring-progress" id="ringProgress"></circle>
+        </svg>
+        <div class="score-ring-label">
+          <span id="scoreRingValue">0%</span>
+          <span class="score-ring-caption">Overall Match</span>
+        </div>
+      </div>
+
+      <div class="score-bars" id="scoreBars">
+        <div class="score-bar-row">
+          <span class="score-bar-label">Skill Match</span>
+          <div class="progress-track"><div class="progress-fill" id="barSkill"></div></div>
+          <span class="score-bar-value" id="valSkill">0%</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Keyword Match</span>
+          <div class="progress-track"><div class="progress-fill" id="barKeyword"></div></div>
+          <span class="score-bar-value" id="valKeyword">0%</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Experience Match</span>
+          <div class="progress-track"><div class="progress-fill" id="barExperience"></div></div>
+          <span class="score-bar-value" id="valExperience">0%</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="score-bar-label">Education Match</span>
+          <div class="progress-track"><div class="progress-fill" id="barEducation"></div></div>
+          <span class="score-bar-value" id="valEducation">0%</span>
+        </div>
+      </div>
+
+      <div class="detail-columns">
+        <div>
+          <h4 class="subheading">Strengths</h4>
+          <ul class="tick-list matched" id="detailMatched"></ul>
+        </div>
+        <div>
+          <h4 class="subheading">Missing Requirements</h4>
+          <ul class="tick-list missing" id="detailMissing"></ul>
+        </div>
+      </div>
+
+      <h4 class="subheading">Relevant Keywords</h4>
+      <div class="tag-row muted-tags" id="detailKeywords"></div>
+
+      <h4 class="subheading">Analysis Summary</h4>
+      <p class="analysis-summary" id="detailSummary"></p>
+    </div>
+  </div>
+
+  <!-- ============ 10. HOW IT WORKS ============ -->
+  <section class="how-section" id="how-it-works">
+    <div class="section-inner">
+      <h2>How It Works</h2>
+      <div class="steps-flow">
+        <div class="step-card">
+          <span class="step-num">01</span>
+          <h3>Paste Job Description</h3>
+          <p>Add the complete JD text for the open role.</p>
+        </div>
+        <div class="step-connector" aria-hidden="true"></div>
+        <div class="step-card">
+          <span class="step-num">02</span>
+          <h3>Add Candidate Resumes</h3>
+          <p>Paste resume text or upload a .txt file per candidate.</p>
+        </div>
+        <div class="step-connector" aria-hidden="true"></div>
+        <div class="step-card">
+          <span class="step-num">03</span>
+          <h3>Extract &amp; Compare Requirements</h3>
+          <p>Skills, keywords, experience and education are matched locally.</p>
+        </div>
+        <div class="step-connector" aria-hidden="true"></div>
+        <div class="step-card">
+          <span class="step-num">04</span>
+          <h3>Rank Candidates</h3>
+          <p>Candidates are scored and sorted by overall match.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11. FEATURES ============ -->
+  <section class="features-section" id="about">
+    <div class="section-inner">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Local Processing</h3>
+          <p>All analysis runs directly in the browser.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Requirement Matching</h3>
+          <p>Compares resume content against job requirements.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Candidate Ranking</h3>
+          <p>Automatically ranks candidates according to calculated scores.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Skill Gap Detection</h3>
+          <p>Identifies missing skills and requirements.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Transparent Scoring</h3>
+          <p>Shows how the candidate score was calculated.</p>
+        </div>
+        <div class="feature-card">
+          <h3>No External APIs</h3>
+          <p>No third-party AI or cloud API is required.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 12. PRIVACY SECTION ============ -->
+  <section class="privacy-section">
+    <div class="section-inner">
+      <div class="privacy-card glass">
+        <h2>Your Resume Data Stays Local</h2>
+        <p>Resume information is processed inside the browser and is not sent to an external server.</p>
+        <ul class="privacy-list">
+          <li>🔒 Local Processing</li>
+          <li>🔒 No API Calls</li>
+          <li>🔒 No Cloud Upload</li>
+          <li>🔒 No External Database</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="section-inner footer-inner">
+    <span>HIREme — Rule-Based Resume Analysis and Requirement Matching.</span>
+    <span>Built with HTML, CSS &amp; vanilla JavaScript only.</span>
+  </div>
+</footer>
+
+<div class="sr-only" aria-live="polite" id="liveRegion"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
